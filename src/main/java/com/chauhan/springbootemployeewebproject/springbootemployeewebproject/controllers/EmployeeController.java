@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(path = "/employees")
@@ -18,7 +19,7 @@ public class EmployeeController {
     @PostMapping(path = "/create")
     public EmployeeDTO createNewEmployee(@RequestBody EmployeeDTO inputEmployee){
         System.out.println("creating..");
-      return employeeService.createEmployee(inputEmployee);
+        return employeeService.createEmployee(inputEmployee);
     }
 
     @GetMapping(path = "/{employeeId}")
@@ -39,6 +40,11 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     public void deleteEmployeeById(@PathVariable Long id){
         employeeService.deleteEmployeeById(id);
+    }
+
+    @PatchMapping(path = "/{employeeId}")
+    public EmployeeDTO updatePartialEmployeeById(@RequestBody Map<String,Object>updates,@PathVariable Long employeeId){
+        return employeeService.updatePartialEmployeeById(updates,employeeId);
     }
 
 }

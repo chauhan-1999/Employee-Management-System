@@ -5,8 +5,11 @@ import com.chauhan.springbootemployeewebproject.springbootemployeewebproject.ent
 import com.chauhan.springbootemployeewebproject.springbootemployeewebproject.repositories.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.data.util.ReflectionUtils;
 
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 @Service
 public class EmployeeService {
@@ -45,5 +48,23 @@ public class EmployeeService {
 
     public void deleteEmployeeById(Long id){
         employeeRepository.deleteById(id);
+    }
+
+    public boolean isExistsByEmployeeId(Long id){
+        return employeeRepository.existsById(id);
+    }
+
+    public EmployeeDTO updatePartialEmployeeById(Map<String,Object> updates, Long employeeId) {
+        boolean exists = isExistsByEmployeeId(employeeId);
+        if(!exists) return null;
+
+        EmployeeEntity employeeEntity = employeeRepository.findById(employeeId).get();
+        updates.forEach((field,value)->{
+            Field fieldToBeUpdated = ReflectionUtils.findRequiredField(EmployeeEntity.class,field);
+            fieldToBeUpdated.setAccessible(true);
+            ReflectionUtils.setField(fieldToBeUpdated,employeeEntity,value);
+        });
+        EmployeeEntity savedEntity = employeeRepository.save(employeeEntity);
+        return modelMapper.map(savedEntity,EmployeeDTO.class);
     }
 }
