@@ -1,10 +1,7 @@
 package com.chauhan.springbootemployeewebproject.springbootemployeewebproject.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 @Entity
@@ -22,4 +19,5 @@ public class EmployeeEntity {
     private Integer age;
     private LocalDate dateOfJoining;
     private Boolean isActive;
+
 }
