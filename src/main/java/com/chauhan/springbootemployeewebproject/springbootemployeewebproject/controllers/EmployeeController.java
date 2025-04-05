@@ -2,6 +2,7 @@ package com.chauhan.springbootemployeewebproject.springbootemployeewebproject.co
 
 import com.chauhan.springbootemployeewebproject.springbootemployeewebproject.dto.EmployeeDTO;
 import com.chauhan.springbootemployeewebproject.springbootemployeewebproject.services.EmployeeService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class EmployeeController {
     }
 
     @PostMapping(path = "/create")
-    public ResponseEntity<EmployeeDTO> createNewEmployee(@RequestBody EmployeeDTO inputEmployee){
+    public ResponseEntity<EmployeeDTO> createNewEmployee(@RequestBody @Valid EmployeeDTO inputEmployee){
         EmployeeDTO savedEmployee = employeeService.createEmployee(inputEmployee);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);//creating a new Employee so pass a status code
     }

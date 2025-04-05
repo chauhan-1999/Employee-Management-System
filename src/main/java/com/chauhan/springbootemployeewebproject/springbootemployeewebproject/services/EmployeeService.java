@@ -55,6 +55,9 @@ public class EmployeeService {
         if (employeeDTO.getName() != null) {
             employeeEntity.setName(employeeDTO.getName());
         }
+        if (employeeDTO.getEmail() != null) {
+            employeeEntity.setEmail(employeeDTO.getEmail());
+        }
         if (employeeDTO.getAge() != null) {
             employeeEntity.setAge(employeeDTO.getAge());
         }
