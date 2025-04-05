@@ -2,11 +2,13 @@ package com.chauhan.springbootemployeewebproject.springbootemployeewebproject.se
 
 import com.chauhan.springbootemployeewebproject.springbootemployeewebproject.dto.EmployeeDTO;
 import com.chauhan.springbootemployeewebproject.springbootemployeewebproject.entities.EmployeeEntity;
+import com.chauhan.springbootemployeewebproject.springbootemployeewebproject.exceptions.ResourceNotFoundException;
 import com.chauhan.springbootemployeewebproject.springbootemployeewebproject.repositories.EmployeeRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.data.util.ReflectionUtils;
 
+import javax.management.relation.RoleInfoNotFoundException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +47,7 @@ public class EmployeeService {
     }
 
     public EmployeeDTO updateEmployeeById(Long id, EmployeeDTO employeeDTO){
-        boolean exists = isExistsByEmployeeId(id);
-        if(!exists) return null;
-
+        isExistsByEmployeeId(id);
         EmployeeEntity employeeEntity = employeeRepository.findById(id).get();
 
         // Update only the necessary fields
@@ -73,19 +73,18 @@ public class EmployeeService {
     }
 
     public boolean deleteEmployeeById(Long id){
-        boolean exists = isExistsByEmployeeId(id);
-        if(!exists) return false;
+        isExistsByEmployeeId(id);
         employeeRepository.deleteById(id);
         return true;
     }
 
-    public boolean isExistsByEmployeeId(Long id){
-        return employeeRepository.existsById(id);
+    public void isExistsByEmployeeId(Long id){
+        boolean isExists = employeeRepository.existsById(id);
+        if(!isExists) throw new ResourceNotFoundException("Employee not found with id: "+id);
     }
 
     public EmployeeDTO updatePartialEmployeeById(Map<String,Object> updates, Long employeeId) {
-        boolean exists = isExistsByEmployeeId(employeeId);
-        if(!exists) return null;
+        isExistsByEmployeeId(employeeId);
 
         EmployeeEntity employeeEntity = employeeRepository.findById(employeeId).get();
         updates.forEach((field,value)->{
